@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expenzo - Simple Expense Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0d0d0d',
+            card: '#161616',
+            border: '#262626',
+            muted: '#737373',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-bg text-white min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2L4 8v16l12 6 12-6V8L16 2z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 12v8M12 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="text-xl font-semibold">Expenzo</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-muted hover:text-white transition-colors">Features</a>
+        <a href="#preview" class="text-muted hover:text-white transition-colors">Preview</a>
+        <a href="#about" class="text-muted hover:text-white transition-colors">About</a>
+      </nav>
+      <a href="/dashboard" class="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-colors">
+        Open App
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-sm text-muted mb-6">
+        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+        Free & Open Source
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+        Track your expenses,<br/>
+        <span class="text-muted">understand your spending.</span>
+      </h1>
+      <p class="text-lg text-muted max-w-2xl mx-auto mb-10">
+        A simple expense tracker. Add your expenses, organize by categories, 
+        and see where your money goes. No subscriptions, no complexity.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/dashboard" class="w-full sm:w-auto px-8 py-3 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-colors">
+          Start Tracking
+        </a>
+        <a href="#preview" class="w-full sm:w-auto px-8 py-3 border border-border rounded-lg font-medium hover:bg-card transition-colors">
+          See Preview
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Simple by design</h2>
+        <p class="text-muted text-lg">Everything you need, nothing you don&apos;t.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="p-6 rounded-xl border border-border bg-card">
+          <div class="w-12 h-12 rounded-lg bg-bg border border-border flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Add Expenses</h3>
+          <p class="text-muted">Quickly log your expenses with amount, description, and date. Simple form, no friction.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="p-6 rounded-xl border border-border bg-card">
+          <div class="w-12 h-12 rounded-lg bg-bg border border-border flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Categories</h3>
+          <p class="text-muted">Organize expenses into categories like Food, Transport, Bills, Shopping, and more.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="p-6 rounded-xl border border-border bg-card">
+          <div class="w-12 h-12 rounded-lg bg-bg border border-border flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Monthly Overview</h3>
+          <p class="text-muted">See your spending breakdown by month and category. Understand where your money goes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview -->
+  <section id="preview" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Clean dashboard</h2>
+        <p class="text-muted text-lg">A quick look at how things are going.</p>
+      </div>
+      
+      <!-- Dashboard Preview -->
+      <div class="rounded-2xl border border-border bg-card p-6 md:p-8">
+        <!-- Top Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="p-4 rounded-xl border border-border bg-bg">
+            <p class="text-muted text-sm mb-1">This Month</p>
+            <p class="text-2xl font-bold">$1,234</p>
+          </div>
+          <div class="p-4 rounded-xl border border-border bg-bg">
+            <p class="text-muted text-sm mb-1">Transactions</p>
+            <p class="text-2xl font-bold">23</p>
+          </div>
+          <div class="p-4 rounded-xl border border-border bg-bg">
+            <p class="text-muted text-sm mb-1">Biggest Category</p>
+            <p class="text-2xl font-bold">Food</p>
+          </div>
+          <div class="p-4 rounded-xl border border-border bg-bg">
+            <p class="text-muted text-sm mb-1">Daily Average</p>
+            <p class="text-2xl font-bold">$41</p>
+          </div>
+        </div>
+
+        <!-- Recent Expenses -->
+        <div class="rounded-xl border border-border bg-bg p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">Recent Expenses</h3>
+            <span class="text-sm text-muted">April 2024</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between py-2 border-b border-border">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-sm">🍕</span>
+                <div>
+                  <p class="font-medium">Lunch</p>
+                  <p class="text-sm text-muted">Food</p>
+                </div>
+              </div>
+              <p class="font-semibold">$18.50</p>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-border">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm">🚌</span>
+                <div>
+                  <p class="font-medium">Bus Pass</p>
+                  <p class="text-sm text-muted">Transport</p>
+                </div>
+              </div>
+              <p class="font-semibold">$45.00</p>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm">🛒</span>
+                <div>
+                  <p class="font-medium">Groceries</p>
+                  <p class="text-sm text-muted">Shopping</p>
+                </div>
+              </div>
+              <p class="font-semibold">$67.30</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-20 px-6 border-t border-border">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Built for simplicity</h2>
+      <p class="text-muted text-lg mb-8">
+        No sign-ups required. No payment tracking. No bank connections. 
+        Just a simple tool to manually track your expenses and understand your spending habits.
+      </p>
+      <a href="/dashboard" class="inline-flex px-8 py-3 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-colors">
+        Start Tracking Now
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-6 border-t border-border">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <svg class="w-6 h-6" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2L4 8v16l12 6 12-6V8L16 2z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 12v8M12 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="font-semibold">Expenzo</span>
+      </div>
+      <p class="text-muted text-sm">A simple expense tracker project.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
