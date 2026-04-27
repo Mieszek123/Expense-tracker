@@ -1,8 +1,9 @@
 let allTransactions = []
 
-function renderTransactions(transactions) {
-    const list = document.getElementById("transactions-list")
-    list.innerHTML = transactions.map(t => `
+function renderTransactions(transactions, limit = null) {
+    const toRender = limit ? transactions.slice(0, limit) : transactions
+    const lists = document.querySelectorAll(".transactions-list")
+    const html = toRender.map(t => `
         <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: ${t.category_color}22">
@@ -28,6 +29,10 @@ function renderTransactions(transactions) {
             </div>
         </div>
     `).join("")
+    
+    lists.forEach(list => {
+        list.innerHTML = html
+    })
 }
 
 function filterTransactions() {
@@ -65,9 +70,18 @@ async function loadDashboard() {
 
     const categorySelect = document.getElementById("category_select")
     categorySelect.innerHTML = '<option value="">Select category</option>' +
-        data.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join("")
+    data.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join("")
 
-    renderTransactions(allTransactions)
+
+    const activePage = document.querySelector('.page.active')?.id
+    
+    if (activePage === 'dashboard') {
+        renderTransactions(allTransactions, 5)  // dashboard = 5
+    } else if (activePage === 'transactions') {
+        renderTransactions(allTransactions)  // transactions = wszystkie
+    }
+
+
 }
 
 async function AddCategory() {
@@ -103,6 +117,7 @@ function navigate(page) {
 
     document.querySelector(`.nav-btn[data-page="${page}"]`).classList.add('bg-zinc-800', 'text-white')
     document.querySelector(`.nav-btn[data-page="${page}"]`).classList.remove('text-zinc-400')
+
 }
 
 async function addTransaction() {
@@ -126,4 +141,4 @@ async function deleteTransaction(id) {
     if (res.ok) loadDashboard()
 }
 
-loadDashboard()
+document.addEventListener('DOMContentLoaded', loadDashboard)

@@ -145,88 +145,7 @@
             </div>
 
             <!-- Recent Expenses -->
-            <div class="bg-zinc-900 border border-zinc-800 rounded-xl">
-                <div class="flex items-center justify-between p-6 border-b border-zinc-800">
-                    <h2 class="text-lg font-semibold">Recent Expenses</h2>
-                    <button class="text-sm text-zinc-400 hover:text-white transition-colors">View all</button>
-                </div>
-                <div class="divide-y divide-zinc-800">
-                    <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
-                                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                            </div>
-                            <div>
-                                <div class="font-medium">Grocery Store</div>
-                                <div class="text-sm text-zinc-500">Food & Dining</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-medium">-$52.40</div>
-                            <div class="text-sm text-zinc-500">Today</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                            </div>
-                            <div>
-                                <div class="font-medium">Uber Ride</div>
-                                <div class="text-sm text-zinc-500">Transport</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-medium">-$18.50</div>
-                            <div class="text-sm text-zinc-500">Today</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-                            </div>
-                            <div>
-                                <div class="font-medium">Netflix</div>
-                                <div class="text-sm text-zinc-500">Entertainment</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-medium">-$15.99</div>
-                            <div class="text-sm text-zinc-500">Yesterday</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                            </div>
-                            <div>
-                                <div class="font-medium">Electric Bill</div>
-                                <div class="text-sm text-zinc-500">Bills & Utilities</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-medium">-$89.00</div>
-                            <div class="text-sm text-zinc-500">Apr 23</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                            </div>
-                            <div>
-                                <div class="font-medium">Amazon</div>
-                                <div class="text-sm text-zinc-500">Shopping</div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-medium">-$124.99</div>
-                            <div class="text-sm text-zinc-500">Apr 22</div>
-                        </div>
-                    </div>
-                </div>
+            <div id="transactions-list_dashboard" class="transactions-list divide-y divide-zinc-800">
             </div>
         </section>
 
@@ -336,7 +255,7 @@
                         </select>
                     </div>
                 </div>
-                <div id="transactions-list" class="divide-y divide-zinc-800">
+                <div id="transactions-list" class="transactions-list divide-y divide-zinc-800">
                 </div>
             </div>
         </section>
