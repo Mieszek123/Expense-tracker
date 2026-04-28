@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from fastapi import APIRouter, Request, Depends, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
@@ -8,6 +10,7 @@ from app.schema import UserRegister, UserLogin, CategoryCreate, TransactionCreat
 from app.database import get_db
 from app.tokens import get_current_user_from_cookie, create_token
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -93,7 +96,7 @@ async def logout(response: Response): # Wymaga obiektu Response
 @router.get("/api/data")
 async def dashboard_data(current_user: str = Depends(get_current_user_from_cookie), db: Session = Depends(get_db)):
     categories = db.query(Category).filter(Category.user_id == current_user.id).all()
-    transactions = db.query(Transaction).filter(Transaction.user_id == current_user.id).all()
+    transactions = db.query(Transaction).filter(Transaction.user_id == current_user.id).order_by(Transaction.created_at.desc()).all()
 
     return {
         "username": current_user.username,
@@ -161,3 +164,39 @@ async def del_category(transaction_id: int, current_user: str = Depends(get_curr
     db.delete(transaction)
     db.commit()
     return {"status": "ok"}
+
+@router.get("/api/month_transactions")
+async def month_transactions(
+    current_user: str = Depends(get_current_user_from_cookie), 
+    db: Session = Depends(get_db)
+):
+    now = datetime.now()
+    first_day = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    
+    if now.month == 12:
+        last_day = now.replace(year=now.year + 1, month=1, day=1) - timedelta(days=1)
+    else:
+        last_day = now.replace(month=now.month + 1, day=1) - timedelta(days=1)
+    
+    transactions = db.query(Transaction).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.created_at >= first_day,
+        Transaction.created_at <= last_day
+    ).all()
+    
+    # 🔍 DIAGNOSTYKA - sprawdź w terminalu co się wyświetli
+    print(f"Znaleziono transakcji: {len(transactions)}")
+    print(f"first_day: {first_day}")
+    print(f"last_day: {last_day}")
+    for t in transactions:
+        print(f"  - {t.name}: {t.amount} ({type(t.amount)}) | {t.type} | {t.created_at}")
+    
+    sum_expense = sum(t.amount for t in transactions if t.type == "expense") or 0
+    sum_income = sum(t.amount for t in transactions if t.type == "income") or 0
+    sum_all = sum_income - sum_expense
+    
+    return {
+        "sum_all": sum_all,
+        "sum_expense": sum_expense,
+        "sum_income": sum_income
+    }

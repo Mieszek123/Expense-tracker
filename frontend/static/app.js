@@ -44,43 +44,50 @@ function filterTransactions() {
 }
 
 async function loadDashboard() {
-    const res = await fetch("/api/data")
-    const data = await res.json()
+    try {
+        const res = await fetch("/api/data")
+        const data = await res.json()
 
-    allTransactions = data.transactions
+        allTransactions = data.transactions
 
-    document.getElementById("api_username").textContent = data.username
-    document.getElementById("nav_username").textContent = data.username
-    document.getElementById("nav_letter").textContent = data.username[0].toUpperCase()
+        document.getElementById("api_username").textContent = data.username
+        document.getElementById("nav_username").textContent = data.username
+        document.getElementById("nav_letter").textContent = data.username[0].toUpperCase()
 
-    const list_categories = document.getElementById("categories-list")
-    list_categories.innerHTML = data.categories.map(cat => `
-        <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
-            <div class="flex items-center gap-3">
-                <div class="w-4 h-4 rounded-full" style="background: ${cat.color}"></div>
-                <span class="text-sm">${cat.name}</span>
+        const list_categories = document.getElementById("categories-list")
+        list_categories.innerHTML = data.categories.map(cat => `
+            <div class="flex items-center justify-between p-4 hover:bg-zinc-800/30 transition-colors">
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-4 rounded-full" style="background: ${cat.color}"></div>
+                    <span class="text-sm">${cat.name}</span>
+                </div>
+                <button onclick="deleteCategory(${cat.id})" class="text-zinc-500 hover:text-red-400 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
             </div>
-            <button onclick="deleteCategory(${cat.id})" class="text-zinc-500 hover:text-red-400 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-            </button>
-        </div>
-    `).join("")
+        `).join("")
 
-    const categorySelect = document.getElementById("category_select")
-    categorySelect.innerHTML = '<option value="">Select category</option>' +
-    data.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join("")
+        const categorySelect = document.getElementById("category_select")
+        categorySelect.innerHTML = '<option value="">-</option>' +
+        data.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join("")
 
 
-    const activePage = document.querySelector('.page.active')?.id
-    
-    if (activePage === 'dashboard') {
-        renderTransactions(allTransactions, 5)  // dashboard = 5
-    } else if (activePage === 'transactions') {
-        renderTransactions(allTransactions)  // transactions = wszystkie
+        const activePage = document.querySelector('.page.active')?.id
+        
+        if (activePage === 'dashboard') {
+            renderTransactions(allTransactions, 5)  // dashboard = 5
+        } else if (activePage === 'transactions') {
+            renderTransactions(allTransactions)  // transactions = wszystkie
+        }
+
+        await monthTransaction()
+
+    } catch (error) {
+        // To pokaże Ci DOKŁADNIE co się wywala i w której linii
+        console.error("BŁĄD w loadDashboard:", error)
     }
-
 
 }
 
@@ -133,12 +140,40 @@ async function addTransaction() {
         body: JSON.stringify({ transaction_name, transaction_amount, transaction_type, transaction_category_id, transaction_date })
     })
 
-    if (res.ok) loadDashboard()
+    if (res.ok) {
+        // Wyczyść formularz
+        document.getElementById("transaction_name").value = ""
+        document.getElementById("transaction_amount").value = ""
+        document.getElementById("category_select").value = ""
+        document.getElementById("transaction_date").value = ""
+        loadDashboard()
+    }
 }
 
 async function deleteTransaction(id) {
     const res = await fetch(`/api/del_transaction/${id}`, { method: "DELETE" })
     if (res.ok) loadDashboard()
+}
+
+async function monthTransaction() {
+
+
+    const res = await fetch("/api/month_transactions")
+    const data = await res.json()
+
+    document.getElementById("this-month").textContent = data.sum_all
+    
+    const fromLastMonth = document.getElementById("from-last-month")
+    
+    if (data.sum_all >= 0) {
+        fromLastMonth.textContent = "You're saving money :)"
+        fromLastMonth.classList.remove('text-red-400')
+        fromLastMonth.classList.add('text-green-400')
+    } else {
+        fromLastMonth.textContent = "You're spending money :("
+        fromLastMonth.classList.remove('text-green-400')
+        fromLastMonth.classList.add('text-red-400')
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard)

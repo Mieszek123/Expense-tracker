@@ -129,13 +129,13 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
                     <div class="text-sm text-zinc-500 mb-2">This Month</div>
-                    <div class="text-3xl font-bold">$2,101.50</div>
-                    <div class="text-sm text-red-400 mt-2">+$245 from last month</div>
+                    <div class="text-3xl font-bold"><span id="this-month" >0</span> zł</div>
+                    <div id="from-last-month" class="text-sm text-red-400 mt-2"></div>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
                     <div class="text-sm text-zinc-500 mb-2">This Week</div>
                     <div class="text-3xl font-bold">$487.20</div>
-                    <div class="text-sm text-green-400 mt-2">-$62 from last week</div>
+                    <div class="text-sm text-green-400 mt-2"></div>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
                     <div class="text-sm text-zinc-500 mb-2">Today</div>
@@ -213,12 +213,41 @@
                         </div>
                         <!-- Type -->
                         <div>
+                            <input type="hidden" name="type" value="expense" id="transaction_type">
                             <label class="block text-sm text-zinc-400 mb-2">Type</label>
-                            <select id="transaction_type" name="type" required
-                                class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-zinc-600">
-                                <option value="expense">Expense</option>
-                                <option value="income">Income</option>
-                            </select>
+                            
+                            <div class="flex gap-1 bg-zinc-800 border border-zinc-700 p-1 rounded-lg h-[38px]">
+                                <input 
+                                    type="radio" 
+                                    id="expense" 
+                                    name="type" 
+                                    value="expense" 
+                                    checked
+                                    class="hidden"
+                                />
+                                <label 
+                                    for="expense" 
+                                    class="flex-1 px-3 flex items-center justify-center rounded-md text-sm font-medium cursor-pointer transition-all text-center bg-zinc-700 text-red-400"
+                                    id="expense-label"
+                                >
+                                    Expense
+                                </label>
+
+                                <input 
+                                    type="radio" 
+                                    id="income" 
+                                    name="type" 
+                                    value="income"
+                                    class="hidden"
+                                />
+                                <label 
+                                    for="income" 
+                                    class="flex-1 px-3 flex items-center justify-center rounded-md text-sm font-medium cursor-pointer transition-all text-center text-zinc-500"
+                                    id="income-label"
+                                >
+                                    Income
+                                </label>
+                            </div>
                         </div>
                         <!-- Category -->
                         <div>
@@ -262,5 +291,35 @@
 
     </main>
 
+
+    <script>
+    const expenseRadio = document.getElementById('expense');
+    const incomeRadio = document.getElementById('income');
+    const expenseLabel = document.getElementById('expense-label');
+    const incomeLabel = document.getElementById('income-label');
+    const transactionTypeInput = document.getElementById('transaction_type');
+
+    function updateColors() {
+        if (expenseRadio.checked) {
+            expenseLabel.classList.add('bg-zinc-700', 'text-red-400');
+            expenseLabel.classList.remove('text-zinc-500', 'bg-zinc-800');
+            incomeLabel.classList.remove('bg-zinc-700', 'text-green-400');
+            incomeLabel.classList.add('text-zinc-500', 'bg-zinc-800');
+            transactionTypeInput.value = 'expense';
+        } else {
+            incomeLabel.classList.add('bg-zinc-700', 'text-green-400');
+            incomeLabel.classList.remove('text-zinc-500', 'bg-zinc-800');
+            expenseLabel.classList.remove('bg-zinc-700', 'text-red-400');
+            expenseLabel.classList.add('text-zinc-500', 'bg-zinc-800');
+            transactionTypeInput.value = 'income';
+        }
+    }
+
+    expenseRadio.addEventListener('change', updateColors);
+    incomeRadio.addEventListener('change', updateColors);
+
+    // Inicjalna konfiguracja
+    updateColors();
+    </script>
 </body>
 </html>
