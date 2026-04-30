@@ -77,15 +77,21 @@ async function loadDashboard() {
         const activePage = document.querySelector('.page.active')?.id
         
         if (activePage === 'dashboard') {
-            renderTransactions(allTransactions, 5)  // dashboard = 5
-        } else if (activePage === 'transactions') {
-            renderTransactions(allTransactions)  // transactions = wszystkie
+            renderTransactions(allTransactions, 5)  
+        } 
+        else if (activePage === 'transactions') {
+            renderTransactions(allTransactions) 
+        } 
+        else if (activePage === 'charts') {
+            renderChart()
         }
 
+
         await monthTransaction()
+        await weekTransaction()
+        todayTransaction()
 
     } catch (error) {
-        // To pokaże Ci DOKŁADNIE co się wywala i w której linii
         console.error("BŁĄD w loadDashboard:", error)
     }
 
@@ -113,7 +119,6 @@ async function deleteCategory(id) {
 }
 
 function navigate(page) {
-    loadDashboard()
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
     document.getElementById(page).classList.add('active')
 
@@ -125,6 +130,14 @@ function navigate(page) {
     document.querySelector(`.nav-btn[data-page="${page}"]`).classList.add('bg-zinc-800', 'text-white')
     document.querySelector(`.nav-btn[data-page="${page}"]`).classList.remove('text-zinc-400')
 
+    if (page === 'dashboard') {
+        loadDashboard()
+    } else if (page === 'transactions') {
+        loadDashboard()
+    } else if (page === 'charts') {
+        loadDashboard()
+        setTimeout(() => renderChart(), 100)
+    }
 }
 
 async function addTransaction() {
@@ -141,7 +154,6 @@ async function addTransaction() {
     })
 
     if (res.ok) {
-        // Wyczyść formularz
         document.getElementById("transaction_name").value = ""
         document.getElementById("transaction_amount").value = ""
         document.getElementById("category_select").value = ""
@@ -175,5 +187,125 @@ async function monthTransaction() {
         fromLastMonth.classList.add('text-red-400')
     }
 }
+
+async function weekTransaction() {
+
+
+    const res = await fetch("/api/week_transactions")
+    const data = await res.json()
+
+    document.getElementById("this-week").textContent = data.sum_all
+    
+    const fromLastWeek = document.getElementById("from-last-week")
+    
+    if (data.sum_all >= 0) {
+        fromLastWeek.textContent = "You're saving money :)"
+        fromLastWeek.classList.remove('text-red-400')
+        fromLastWeek.classList.add('text-green-400')
+    } else {
+        fromLastWeek.textContent = "You're spending money :("
+        fromLastWeek.classList.remove('text-green-400')
+        fromLastWeek.classList.add('text-red-400')
+    }
+}
+
+async function todayTransaction() {
+
+
+    const res = await fetch("/api/today_transactions")
+    const data = await res.json()
+
+    document.getElementById("this-day").textContent = data.sum_all
+    
+    document.getElementById("this-day-len").textContent = data.transactions_len
+    
+}
+
+let chartInstance = null;
+
+async function renderChart() {
+    if (chartInstance) {
+        chartInstance.destroy()
+    }
+
+    const res = await fetch("/api/data")
+    const data = await res.json()
+    
+    const categoryTotals = {}
+    const categoryColors = {}
+    
+    data.transactions.forEach(t => {
+        if (t.type === 'expense') {
+            const categoryName = t.category || 'Unknown'
+            
+            if (!categoryTotals[categoryName]) {
+                categoryTotals[categoryName] = 0
+                categoryColors[categoryName] = t.category_color || '#FF6B6B'
+            }
+            categoryTotals[categoryName] += Math.abs(t.amount)
+        }
+    })
+    
+    if (Object.keys(categoryTotals).length === 0) {
+        return
+    }
+    
+    const labels = Object.keys(categoryTotals)
+    const amounts = Object.values(categoryTotals)
+    const colors = labels.map(cat => categoryColors[cat] || '#FF6B6B')
+    
+    const ctx = document.getElementById('myChart')
+    
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Wydatki według kategorii',
+                data: amounts,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c + '80'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Wydatki według kategorii'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Kwota (zł)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Kategoria'
+                    }
+                }
+            }
+        }
+    })
+}
+
+async function logOut(){
+    const res = await fetch("/api/logout")
+    if (res.ok || res.status === 303) {
+        window.location.href = "/login"
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', loadDashboard)

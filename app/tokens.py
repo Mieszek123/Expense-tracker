@@ -6,9 +6,15 @@ from app.models import User
 from sqlalchemy.orm import Session
 from fastapi import Depends
 
-SECRET_KEY = "twoj-sekretny-klucz"
-ALGORITHM = "HS256"
-EXPIRE_MINUTES = 30
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY", "fdnjanfnue2u3fu2uhuefhdshvwhuhfn")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./expenses.db")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+EXPIRE_MINUTES=30
 
 def create_token(data: dict) -> str:
     payload = data.copy()

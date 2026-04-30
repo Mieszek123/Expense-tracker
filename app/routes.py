@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Request, Depends, HTTPException, Response
 from fastapi.templating import Jinja2Templates
@@ -199,4 +199,44 @@ async def month_transactions(
         "sum_all": sum_all,
         "sum_expense": sum_expense,
         "sum_income": sum_income
+    }
+
+@router.get("/api/week_transactions")
+async def week_transactions(current_user: str = Depends(get_current_user_from_cookie), db: Session = Depends(get_db)):
+    now = datetime.now()
+    seven_days_ago = now - timedelta(days=7)
+    
+    transactions = db.query(Transaction).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.created_at >= seven_days_ago
+    ).all()
+    
+    sum_expense = sum(t.amount for t in transactions if t.type == "expense") or 0
+    sum_income = sum(t.amount for t in transactions if t.type == "income") or 0
+    sum_all = sum_income - sum_expense
+    
+    return {
+        "sum_all": sum_all,
+    }
+
+@router.get("/api/today_transactions")
+async def today_transactions(current_user: str = Depends(get_current_user_from_cookie), db: Session = Depends(get_db)):
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    tomorrow_start = today_start + timedelta(days=1)
+    
+    transactions = db.query(Transaction).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.created_at >= today_start,
+        Transaction.created_at < tomorrow_start
+    ).all()
+
+    transactions_len = len(transactions)
+    
+    sum_expense = sum(t.amount for t in transactions if t.type == "expense") or 0
+    sum_income = sum(t.amount for t in transactions if t.type == "income") or 0
+    sum_all = sum_income - sum_expense
+    
+    return {
+        "sum_all": sum_all,
+        "transactions_len": transactions_len
     }
